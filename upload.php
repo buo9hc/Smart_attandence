@@ -37,9 +37,22 @@
   } else {
     echo "Error creating table: " . $conn->error;
   }
-  $conn->query("drop table $class_name");  // use for debug
+  // $conn->query("drop table $class_name");  // use for debug
+
+  // instert data to table
+ 
+  $myfile = fopen("data.txt", "r") or die("Unable to open file!");
+  // Output one line until end-of-file
+  while(!feof($myfile)) {
+    $sql = fgets($myfile) ;
+    $conn->multi_query($sql);
+  }
+  fclose($myfile);
 
   $conn->close();
 
-  shell_exec("rm -rf creatable_script.txt");
+  // shell_exec("rm -rf creatable_script.txt"); // use for debug
+
+
+
 ?>

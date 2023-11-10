@@ -8,10 +8,10 @@ rmsign_table = str.maketrans(
 )
 
 import sys
-# path = sys.argv[1]
-path = "uploads/DSDiemDanh_222SCDA331629_02CLC.xlsx"
-# table_name = sys.argv[2]
-table_name = "SCDA331629"
+path = sys.argv[1]
+table_name = sys.argv[2]
+# path = "uploads/DSDiemDanh_222SCDA331629_02CLC.xlsx"
+# table_name = "SCDA331629"
 
 wb_obj = openpyxl.load_workbook(path)
 sheet_obj = wb_obj.active
@@ -21,7 +21,10 @@ column = sheet_obj.max_column
 
 #//Find Row contain table header
 table = []
+data_col = ['','','','','']
+data_row = []
 temp = 0
+count = 0
 for i in range(1, row + 1):  
     cell_obj = sheet_obj.cell(row = i, column = 1)  
     if(cell_obj.value == "STT" or cell_obj.value == "TT"):
@@ -35,23 +38,36 @@ for i in range(1, row + 1):
                 table.append(rm_sign)
                 # print(str(table_header.value))
     if (temp!=0 and i > temp):
+        n = 0
         for j in range(2,column + 1):
             cell_data = sheet_obj.cell(row = i, column = j)
             if (cell_data.value != None):
-                f = open("data.txt", "a")
-                f.write(str(cell_data.value))
-                f.close()
-        f = open("data.txt", "a")
-        f.write("\n")
-        f.close()
-# f = open("creatable_script.txt", "x")
+                data = str(cell_data.value)
+                data = data.strip()
+                data_col[n] = data
+                print(data_col)
+                n+=1
 
-# f.write("CREATE TABLE " + table_name + "(" + table[0] + " MEDIUMINT NOT NULL AUTO_INCREMENT PRIMARY KEY, "
-#                                          + table[1] + " VARCHAR(8) NOT NULL, "
-#                                          + table[2] + " VARCHAR(30) NOT NULL, "
-#                                          + table[3] + " VARCHAR(10) NOT NULL, "
-#                                          + table[4] + " VARCHAR(15) NOT NULL, "
-#                                          + table[5] + " VARCHAR(15) NOT NULL"
-#                                          + ")")
+        if(cell_obj.value != None):
+            data_row.append(data_col)
+            f = open("data.txt", "a")
+            f.write("INSERT INTO " + table_name + "(" 
+                + table[1] + ", " + table[2] + ", " + table[3] + ", " + table[4] + ", " + table[5]
+                + ") "
+                + "VALUES ("+"'" + data_row[count][0] + "'" + ", " + "'" + data_row[count][1] + "'" + ", " + "'" + data_row[count][2] + "'" + ", " + "'" + data_row[count][3] + "'" + ", " + "'" + data_row[count][4] + "'"
+                + ")"+"\n")
+            f.close()
+            count +=1
+            print(count)
+            
+f = open("creatable_script.txt", "x")
 
-# f.close()
+f.write("CREATE TABLE " + table_name + "(" + table[0] + " MEDIUMINT NOT NULL AUTO_INCREMENT PRIMARY KEY, "
+                                         + table[1] + " VARCHAR(8) NOT NULL, "
+                                         + table[2] + " VARCHAR(30) NOT NULL, "
+                                         + table[3] + " VARCHAR(10) NOT NULL, "
+                                         + table[4] + " VARCHAR(15) NOT NULL, "
+                                         + table[5] + " VARCHAR(15) NOT NULL"
+                                         + ")")
+
+f.close()
