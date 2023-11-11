@@ -25,6 +25,7 @@ data_col = ['','','','','']
 data_row = []
 temp = 0
 count = 0
+
 for i in range(1, row + 1):  
     cell_obj = sheet_obj.cell(row = i, column = 1)  
     if(cell_obj.value == "STT" or cell_obj.value == "TT"):
@@ -32,11 +33,11 @@ for i in range(1, row + 1):
         for j in range(1,column + 1):
             table_header = sheet_obj.cell(row = i, column = j)
             if (table_header.value != None):
-                rm_sign = table_header.value
+                rm_sign = str(table_header.value)
                 rm_sign = rm_sign.translate(rmsign_table)
                 rm_sign = rm_sign.replace(" ", "_")
                 table.append(rm_sign)
-                # print(str(table_header.value))
+                print(str(table_header.value))
     if (temp!=0 and i > temp):
         n = 0
         for j in range(2,column + 1):
@@ -45,7 +46,7 @@ for i in range(1, row + 1):
                 data = str(cell_data.value)
                 data = data.strip()
                 data_col[n] = data
-                print(data_col)
+                # print(data_col)
                 n+=1
 
         if(cell_obj.value != None):
@@ -58,7 +59,7 @@ for i in range(1, row + 1):
                 + ")"+"\n")
             f.close()
             count +=1
-            print(count)
+            # print(count)
             
 f = open("creatable_script.txt", "x")
 
@@ -67,7 +68,26 @@ f.write("CREATE TABLE " + table_name + "(" + table[0] + " MEDIUMINT NOT NULL AUT
                                          + table[2] + " VARCHAR(30) NOT NULL, "
                                          + table[3] + " VARCHAR(10) NOT NULL, "
                                          + table[4] + " VARCHAR(15) NOT NULL, "
-                                         + table[5] + " VARCHAR(15) NOT NULL"
+                                         + table[5] + " VARCHAR(15) NOT NULL, "
+                                         + "Tuan_"  + table[6] + " VARCHAR(255) , "
+                                         + "Tuan_"  + table[7] + " VARCHAR(255) , "
+                                         + "Tuan_"  + table[8] + " VARCHAR(255) , "
+                                         + "Tuan_"  + table[9] + " VARCHAR(255) , "
+                                         + "Tuan_"  + table[10] + " VARCHAR(255) , "
+                                         + "Tuan_"  + table[11] + " VARCHAR(255) , "
+                                         + "Tuan_"  + table[12] + " VARCHAR(255) , "
+                                         + "Tuan_"  + table[13] + " VARCHAR(255) , "
+                                         + "Tuan_"  + table[14] + " VARCHAR(255) , "
+                                         + "Tuan_"  + table[15] + " VARCHAR(255) , "
+                                         + "Tuan_"  + table[16] + " VARCHAR(255) , "
+                                         + "Tuan_"  + table[17] + " VARCHAR(255) , "
+                                         + "Tuan_"  + table[18] + " VARCHAR(255) , "
+                                         + "Tuan_"  + table[19] + " VARCHAR(255) , "
+                                         + "Tuan_"  + table[20] + " VARCHAR(255) "
                                          + ")")
 
+f.close()
+
+f = open("class_name.txt", "a")
+f.write(table_name)
 f.close()

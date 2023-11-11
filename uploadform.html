@@ -1,15 +1,95 @@
 
 <!DOCTYPE html>
 <html>
-<body>
+  <head>
+    <meta charset="UTF-8">
+    <title>Chua biet ten gi</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.2.0/chart.min.js"> </script>
+    <style>
+      table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+    </style>
+  </head>
+  <body>
 
-<form action="upload.php" method="post" enctype="multipart/form-data">
-  Select file.xlsx to upload:
-  <input type="file" name="fileToUpload" id="fileToUpload">
-  <input type="text" value="Class name" name="class_name">
-  <input type="submit" value="Upload" name="submit">
-</form>
+    <form action="upload.php" method="post" enctype="multipart/form-data">
+      Select file.xlsx to upload: <br> <br>
+      <input type="file" name="fileToUpload" id="fileToUpload"> <br> <br>
+      <input type="text" value="Class_IoT" name="class_name"> <br> <br>
+      <input type="submit" value="Upload" name="submit">
+    </form> 
 
+    <h2 id="myClass"></h2>
 
-</body>
+    <div id="myDynamicTable"></div>
+
+    <script>
+      // setInterval(addTable,2000);
+
+      function addTable() {
+        //Declare variable
+        var CollNum = 21;
+        const content_header = ["STT", "MSSV", "Họ và tên lót", "Tên", "Ngày sinh", "Tên lớp", "Tuần 1", "Tuần 2", "Tuần 3", "Tuần 4", "Tuần 5", "Tuần 6", "Tuần 7", "Tuần 8", "Tuần 9", "Tuần 10", "Tuần 11", "Tuần 12", "Tuần 13", "Tuần 14", "Tuần 15"];
+        //declare table
+        var myTableDiv = document.getElementById("myDynamicTable");
+        var table = document.createElement('TABLE');
+        // table.style.border = "thin solid black";
+
+        //table header
+        for(var i =0;i < CollNum; i++){
+          var tableHeader = document.createElement('TH');
+          var theader = document.createTextNode(content_header[i]);
+          tableHeader.appendChild(theader);
+          table.appendChild(tableHeader);
+        }
+        $.post('getData.php',function(data){
+          
+          // table body
+          var tableBody = document.createElement('TBODY');
+          table.appendChild(tableBody);
+          
+
+          
+          for (let i = 0; i < data.length; i++) {
+              //
+              var tr = document.createElement('TR');
+              tableBody.appendChild(tr);
+              
+              const content = [data[i].TT,data[i].Ma_SV,data[i].Ho_va_ten_lot,data[i].Ten,data[i].Ngay_sinh,data[i].Ten_lop,
+                               data[i].Tuan_1 ,data[i].Tuan_2,data[i].Tuan_3,data[i].Tuan_4,data[i].Tuan_5,data[i].Tuan_6,data[i].Tuan_7,data[i].Tuan_8,data[i].Tuan_9,data[i].Tuan_10,data[i].Tuan_11,data[i].Tuan_12,data[i].Tuan_13,data[i].Tuan_14,data[i].Tuan_15 ];
+              for (var j = 0; j < CollNum; j++) {
+                var td = document.createElement('TD');
+                // td.width = '75';
+                if (content[j]==null) {
+                  td.appendChild(document.createTextNode(" "));
+                }
+                else{
+                  td.appendChild(document.createTextNode(content[j]));
+                }
+                tr.appendChild(td);
+              }
+            }
+
+          })
+          myTableDiv.appendChild(table);
+          
+          
+          
+        }
+
+      function displaceClassName(){
+        //
+        $.post('getClassName.php',function(class_name){
+          //
+          document.getElementById("myClass").innerHTML = "Class: "+class_name;
+        })
+      }
+      
+      addTable();
+      displaceClassName();
+      </script>
+  </body>
 </html>
