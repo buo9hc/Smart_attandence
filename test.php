@@ -12,14 +12,26 @@ $dbname = "DanhSachLop";
   } 
 
 
-  $sql = "CREATE TABLE list_class(STT SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                                  Class VARCHAR(255) NOT NULL)";
-  $conn->query($sql);
-  $sql = "SELECT Class FROM  list_class WHERE list_class.Class=$class_name";
-  $check_exist_class = $conn->query($sql);
-  if ($check_exist_class == Null) {
-    $sql = "INSERT INTO list_class(Class) VALUES($class_name)";
+  $sql = "SELECT COUNT(TT) FROM Class_IoT";
+  $result = $conn->query($sql);
+  $count = mysqli_fetch_assoc($result);
+for ($i=1; $i <= $count["COUNT(TT)"] ; $i++) { 
+  $sql = "SELECT Ma_SV FROM Class_IoT WHERE TT=$i";
+  $result = $conn->query($sql);
+  $Ma_SV = mysqli_fetch_assoc($result);
+  $Ma_SV = $Ma_SV["Ma_SV"];
+
+  $sql = "SELECT MIN(atendance_time) FROM atendence_time WHERE SID=$Ma_SV";
+  $result = $conn->query($sql);
+  $atTime = mysqli_fetch_assoc($result);
+  $atTime = $atTime["MIN(atendance_time)"];
+  if ($atTime!=Null) {
+    # code...
+    $sql = "UPDATE Class_IoT SET Tuan_6='$atTime' WHERE Ma_SV=$Ma_SV";
     $conn->query($sql);
   }
-
+  // echo $atTime."\n";
+  // echo $Ma_SV."\n";
+}
+  // echo $count["COUNT(TT)"];
  $conn->close();
