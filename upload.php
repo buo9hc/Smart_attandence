@@ -15,7 +15,22 @@
   $target_dir = "uploads/";
   $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
   $class_name = $_POST["class_name"];
+  $dateofWeek_1 = $_POST["date_start"];
+  $time_start = $_POST["time_start"];
+  $time_end = $_POST["time_end"];
 
+  /*
+  store date&time to file.txt
+  */
+  $myfile = fopen("datetime.txt","w");
+  fwrite($myfile, $dateofWeek_1."\n");
+  fwrite($myfile, $time_start."\n");
+  fwrite($myfile, $time_end);
+  fclose($myfile);
+
+  /*
+  upload file to server
+  */
   move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file);
 
   $command = escapeshellcmd('python execute_excel.py '.$target_file." ".$class_name);

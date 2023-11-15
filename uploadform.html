@@ -16,6 +16,10 @@
         overflow: auto;
         background-color: #D9EEE1;
       }
+      div.uploadForm div {
+        width: 10%;
+        float: left;
+      }
     </style>
   </head>
   <body>
@@ -23,13 +27,25 @@
       <form action="upload.php" method="post" enctype="multipart/form-data">
         Select file.xlsx to upload: <br> <br>
         <input type="file" name="fileToUpload" id="fileToUpload"> <br> <br>
-        <input type="text" value="Class_IoT" name="class_name"> <br> <br>
+        <input type="text" value="Class_IoT" name="class_name"> <br><br>
+        <div id="date">
+          <label for="date_st">Ngày bắt đầu</label> <br>
+          <input type="date" id="date_st" name="date_start">
+        </div>
+        <div id="time">
+          <label for="time_st"> Giờ vào lớp hh:mm</label><br>
+          <input type="time" id="time_st" name="time_start">
+        </div>
+        <div id="timeEnd">
+          <label for="time_end"> Giờ kết thúc hh:mm</label><br>
+          <input type="time" id="time_end" name="time_end">
+        </div><br><br><br>
         <input type="submit" value="Upload" name="submit">
       </form> 
     </div>
 
     <h2 id="myClass"></h2>
-
+    <h4 id="myClassTime"></h4>
     <div>
       <table id="myDynamicTable">
         <thead id="myTableHead"></thead>
@@ -93,6 +109,14 @@
           document.getElementById("myClass").innerHTML = "Class: "+class_name;
         })
       }
+      function displaceClassTime() {
+        //
+        $.post('getClassTime.php',function(class_time){
+          //
+          // document.getElementById("myClassTime").innerHTML = "Bắt đầu: "+class_name[0]+"Kết Thúc: "+class_time[1];
+          document.getElementById("myClassTime").innerHTML = "Bắt đầu: "+class_time[0]+" Kết Thúc: "+class_time[1];
+        })
+      }
       function updateTableData() {
         $.post('getData.php',function(data){
           var theTable = document.getElementById("myTableBody").parentNode;
@@ -115,6 +139,15 @@
               }
               else{
                 td.appendChild(document.createTextNode(content[j]));
+                if (j > 5){
+                  if (content[j]=="Đúng giờ") {
+                    
+                    td.style.backgroundColor='#90f94e';
+                  }
+                  else{
+                    td.style.backgroundColor='#f9f64e';
+                  }
+                }
               }
               tr.appendChild(td);
             }
@@ -124,6 +157,7 @@
       }
       addTable();
       displaceClassName();
+      displaceClassTime();
       updateTableData();
       </script>
   </body>
