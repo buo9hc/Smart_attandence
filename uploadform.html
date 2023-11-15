@@ -53,9 +53,7 @@
       </table>
     </div>
 
-    <script>
-      setInterval(updateTableData,1000);
-      
+    <script>      
       function addTable() {
         //Declare variable
         var CollNum = 21;
@@ -155,10 +153,18 @@
           theTable.replaceChild(docFragment, document.getElementById("myTableBody"));
         })
       }
+      function autoUpdateData2DataBase() {
+        //
+        $.post('autoUpdateData2DataBase.php',function(){
+        })
+      }
       addTable();
       displaceClassName();
       displaceClassTime();
       updateTableData();
+      autoUpdateData2DataBase()
+      setInterval(updateTableData,2000);
+      setInterval(autoUpdateData2DataBase,1000);
       </script>
   </body>
 </html>
