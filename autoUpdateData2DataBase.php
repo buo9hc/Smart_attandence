@@ -1,9 +1,9 @@
 <?php
   include("connect2server.php");
 
-  /*
-    read file contain class name
-    */
+  /**
+   * read file contain class name
+   */
   $myfile = fopen("class_name.txt", "r") or die("Unable to open file!");
   $table_name= fread($myfile,filesize("class_name.txt"));
   fclose($myfile);
@@ -23,15 +23,39 @@
   $time_start = date("H:i:s", $time_start);
   $time_end = strtotime($line[2]);
   $time_end = date("H:i:s", $time_end);
-  echo $time_codition."\n";
-  echo $time_start."\n";
-  echo $time_end."\n";
+  // echo $time_codition."\n";
+  // echo $time_start."\n";
+  // echo $time_end."\n";
 
-  $i = 0;
+  $n = 0;
   while($startDate < $endDate){
-    $Weeks[$i] = date("y-m-d",$startDate);
-    $i +=1;
+    $Weeks[$n] = date("y-m-d",$startDate);
+    $n +=1;
     $startDate = strtotime("+ 1 week", $startDate);
+  }
+  /**
+   * check and delete old data
+   */
+  $today = date("y-m-d");
+  $sql = "SELECT Date FROM attendance_check";
+  $result = $conn->query($sql);
+  $check_old_day_data = array();
+  $check =0;
+  while($data_check = mysqli_fetch_assoc($result)){
+    $check_old_day[$check] = $data_check["Date"];
+    $check +=1;
+  }
+
+  for ($i=0; $i < $check; $i++) { 
+    $check_old_day_data = $check_old_day[$i];
+    $old_day = strtotime($check_old_day[$i]);
+    $old_day = date("y-m-d", $old_day);
+    $early_time = strtotime($check_old_day[$i]);
+    $early_time = date("H:i:s", $early_time);
+    if ($old_day<$today || $early_time < $time_codition) {
+      $sql = "DELETE FROM attendance_check WHERE Date='$check_old_day_data'";
+      $result = $conn->query($sql);
+    }
   }
   /**
    * update date time into main database
@@ -54,7 +78,7 @@
     $atTime = strtotime($atDateTime);
     $atTime = date("H:i:s",$atTime);
     if ($atDateTime!=Null && $atTime > $time_codition && $atTime < $time_end) {
-      echo $atTime."\n";
+      // echo $atTime."\n";
       switch ($atDate) {
         case $Weeks[0]:
           if ($atTime > $time_codition && $atTime < $time_start) {
@@ -207,7 +231,6 @@
           }
           break;                                                                                                                                                                                     
         default:
-          # code...
           break;
       }
     }
