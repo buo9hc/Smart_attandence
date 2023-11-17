@@ -18,11 +18,11 @@
 
   $time_codition = strtotime($line[1]);
   $time_codition = strtotime("- 30 minutes 0 seconds",$time_codition);
-  $time_codition = date("h:i:sa",$time_codition);
+  $time_codition = date("H:i:s",$time_codition);
   $time_start = strtotime($line[1]);
-  $time_start = date("h:i:sa", $time_start);
+  $time_start = date("H:i:s", $time_start);
   $time_end = strtotime($line[2]);
-  $time_end = date("h:i:sa", $time_end);
+  $time_end = date("H:i:s", $time_end);
   echo $time_codition."\n";
   echo $time_start."\n";
   echo $time_end."\n";
@@ -45,14 +45,14 @@
     $Ma_SV = mysqli_fetch_assoc($result);
     $Ma_SV = $Ma_SV["Ma_SV"];
 
-    $sql = "SELECT MIN(atendance_time) FROM atendence_time WHERE SID=$Ma_SV";
+    $sql = "SELECT MIN(Date) FROM attendance_check WHERE SID=$Ma_SV";
     $result = $conn->query($sql);
     $atDateTime = mysqli_fetch_assoc($result);
-    $atDateTime = $atDateTime["MIN(atendance_time)"];
+    $atDateTime = $atDateTime["MIN(Date)"];
     $atDate = strtotime($atDateTime);
     $atDate = date("y-m-d", $atDate);
     $atTime = strtotime($atDateTime);
-    $atTime = date("h:i:sa",$atTime);
+    $atTime = date("H:i:s",$atTime);
     if ($atDateTime!=Null && $atTime > $time_codition && $atTime < $time_end) {
       echo $atTime."\n";
       switch ($atDate) {
